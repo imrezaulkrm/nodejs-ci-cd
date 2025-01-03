@@ -24,6 +24,7 @@ pipeline {
         stage('Init application') {
             steps {
                 sh 'npm init -y'
+                sh 'npm install mocha --save-dev'
                 sh 'npm install express --save'
             }
         }
