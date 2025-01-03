@@ -46,8 +46,6 @@ pipeline {
             steps {
                 script {
                     sh """
-                    git config --global user.name "imrezaulkrm"
-                    git config --global user.email "sayem010ahmed@gmail.com" // Replace with your email
                     git checkout ${MAIN_BRANCH}
                     git merge ${FEATURE_BRANCH}
                     git push origin ${MAIN_BRANCH}
