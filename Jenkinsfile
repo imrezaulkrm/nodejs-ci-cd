@@ -17,7 +17,7 @@ pipeline {
         }
         stage('source code pull from github') {
             steps {
-                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+//                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
                 sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd.git'
                 sh 'cd nodejs-ci-cd'
                 sh 'ls'
