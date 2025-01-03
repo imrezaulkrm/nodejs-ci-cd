@@ -50,6 +50,9 @@ pipeline {
             }
             steps {
                 script {
+                    // Stash any uncommitted changes (to avoid losing them)
+                    sh 'git stash'
+
                     // Fetch all branches explicitly
                     sh 'git fetch origin'
 
@@ -61,6 +64,9 @@ pipeline {
                     
                     // Push the merged changes to the remote main branch
                     sh 'git push origin ${MAIN_BRANCH}'
+
+                    // Apply the stashed changes back, if needed
+                    sh 'git stash pop'
                 }
             }
         }
