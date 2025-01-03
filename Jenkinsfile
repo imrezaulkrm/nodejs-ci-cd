@@ -18,6 +18,9 @@ pipeline {
         stage('source code pull from github') {
             steps {
                 git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+                sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+                sh 'cd nodejs-ci-cd'
+                sh 'ls'
             }
         }
         stage('Build Docker Image'){
@@ -54,6 +57,7 @@ pipeline {
             steps {
                 sh "ls"
                 sh "cd nodejs-ci-cd-kubernetes"
+                sh "ls"
                 sh "cat deployment.yml"
                 // Construct the sed command to change only line 17
                 sh """sed -i '17s#image:.*#image: ${IMAGE_NAME}:${IMAGE_TAG}#' deployment.yml"""
