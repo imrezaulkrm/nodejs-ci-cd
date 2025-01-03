@@ -63,7 +63,13 @@ pipeline {
                     sh 'git fetch origin ${FEATURE_BRANCH}:${FEATURE_BRANCH}'
 
                     // Now try to merge the feature branch from remote
-                    sh 'git merge origin/${FEATURE_BRANCH}'
+                    def mergeStatus = sh(script: 'git merge origin/${FEATURE_BRANCH}', returnStatus: true)
+
+                    if (mergeStatus != 0) {
+                        echo "Merge failed due to conflicts. Please resolve conflicts manually."
+                        currentBuild.result = 'FAILURE'
+                        return
+                    }
 
                     // Push the merged changes to the remote main branch
                     sh 'git push origin ${MAIN_BRANCH}'
@@ -79,7 +85,7 @@ pipeline {
             echo 'Tests passed and branch merged successfully!'
         }
         failure {
-            echo 'Tests failed. Merge not performed.'
+            echo 'Tests failed or merge conflicts occurred. Merge not performed.'
         }
     }
 }
