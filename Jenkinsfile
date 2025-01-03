@@ -12,12 +12,17 @@ pipeline {
                     checkout([$class: 'GitSCM', 
                             branches: [[name: "*/${FEATURE_BRANCH}"]],
                             doGenerateSubmoduleConfigurations: false,
-                            extensions: [[$class: 'CleanBeforeCheckout']], // Ensures a clean workspace
+                            extensions: [
+                                [$class: 'CleanBeforeCheckout'], // Ensures a clean workspace
+                                [$class: 'CloneOption', shallow: false] // Ensures fetching all branches
+                            ],
                             userRemoteConfigs: [[
                                 url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git',
                                 credentialsId: "${GIT_CREDENTIALS_ID}"
                             ]]
                     ])
+                    // Ensure all branches are fetched
+                    sh 'git fetch --all'
                 }
             }
         }
@@ -46,7 +51,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                    git checkout ${MAIN_BRANCH}
+                    git fetch --all
+                    git checkout ${MAIN_BRANCH}  // This ensures the main branch is checked out
                     git merge ${FEATURE_BRANCH}
                     git push origin ${MAIN_BRANCH}
                     """
