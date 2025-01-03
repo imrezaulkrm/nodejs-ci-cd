@@ -19,7 +19,13 @@ pipeline {
             steps {
 //                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
                 sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+                sh 'pwd'
+                sh 'ls'
                 sh 'cd nodejs-ci-cd'
+                sh 'pwd'
+                sh 'ls'
+                sh 'cd nodejs-ci-cd'
+                sh 'pwd'
                 sh 'ls'
             }
         }
