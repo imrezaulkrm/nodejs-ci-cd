@@ -18,9 +18,6 @@ pipeline {
         stage('source code pull from github') {
             steps {
                 git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
-                sh 'git fetch --all'
-                // Checkout the branch you want to work on (e.g., main)
-                sh 'git checkout main'
             }
         }
         stage('Build Docker Image'){
@@ -43,21 +40,19 @@ pipeline {
             steps {
                 sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
                 sh "docker rmi ${IMAGE_NAME}:latest"
-//                sh "cd .."
+                sh "cd .."
             }
         }
 
         stage('kubernetes source code pull from github') {
             steps {
-                sh 'git fetch --all'
-                // Checkout the branch you want to work on (e.g., main)
-                sh 'git checkout kubernetes'
+                sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd-kubernetes.git'
             }
         }
 
         stage('Updating Kubernetes deployment file') {
             steps {
-                sh "git checkout kubernetes"
+                sh "cd nodejs-ci-cd-kubernetes"
                 sh "cat deployment.yml"
                 // Construct the sed command to change only line 17
                 sh """sed -i '17s#image:.*#image: ${IMAGE_NAME}:${IMAGE_TAG}#' deployment.yml"""
@@ -69,13 +64,12 @@ pipeline {
         stage('Push the changed deployment file to Git') {
             steps {
                 script {
-                    sh 'git checkout kubernetes'
                     sh 'git config --global user.name "imrezaulkrm"'
                     sh 'git config --global user.email "sayem010ahmed@gmail.com"'
                     sh 'git add deployment.yml'
                     sh 'git commit -m "Updated the deployment file"'
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'gpass', usernameVariable: 'githubuser')]) {
-                        sh "git push https://$githubuser:$gpass@github.com/imrezaulkrm/nodejs-ci-cd.git kubernetes"
+                        sh "git push https://$githubuser:$gpass@github.com/imrezaulkrm/nodejs-ci-cd-kubernetes.git main"
                     }
                 }
             }
