@@ -21,7 +21,12 @@ pipeline {
                 }
             }
         }
-
+        stage('Init application') {
+            steps {
+                sh 'npm init -y'
+                sh 'npm install express --save'
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
