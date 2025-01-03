@@ -43,7 +43,7 @@ pipeline {
             steps {
                 sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
                 sh "docker rmi ${IMAGE_NAME}:latest"
-                sh "cd .."
+//                sh "cd .."
             }
         }
 
