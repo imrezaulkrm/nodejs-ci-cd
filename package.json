@@ -1,15 +1,22 @@
 {
+  "devDependencies": {
+    "mocha": "^11.0.1",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
   "name": "nodejs-ci-cd",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "express": "^4.21.2"
+  "description": "This README explains the structure and approach used to create a CI/CD pipeline for a Node.js application. The pipeline ensures code quality, automates testing, builds Docker images, and deploys the application to a Kubernetes cluster. Additionally, it includes notifications for deployment success or failure.",
+  "directories": {
+    "test": "test"
   }
 }
