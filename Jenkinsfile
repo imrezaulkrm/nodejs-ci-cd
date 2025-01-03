@@ -17,16 +17,7 @@ pipeline {
         }
         stage('source code pull from github') {
             steps {
-//                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
-                sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd.git'
-                sh 'pwd'
-                sh 'ls'
-                sh 'cd nodejs-ci-cd'
-                sh 'pwd'
-                sh 'ls'
-                sh 'cd nodejs-ci-cd'
-                sh 'pwd'
-                sh 'ls'
+                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
             }
         }
         stage('Build Docker Image'){
@@ -52,17 +43,21 @@ pipeline {
                 sh "cd .."
             }
         }
-
+        stage('Cleanup Workspace 1'){
+            steps {
+                script {
+                    cleanWs()
+                }
+            }
+        }
         stage('kubernetes source code pull from github') {
             steps {
-                sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd-kubernetes.git'
+                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd-kubernetes.git'
             }
         }
 
         stage('Updating Kubernetes deployment file') {
             steps {
-                sh "ls"
-                sh "cd nodejs-ci-cd-kubernetes"
                 sh "ls"
                 sh "cat deployment.yml"
                 // Construct the sed command to change only line 17
