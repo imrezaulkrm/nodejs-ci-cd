@@ -8,15 +8,20 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: "*/${FEATURE_BRANCH}"]],
-                          userRemoteConfigs: [[
-                              url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git', // Replace with your repository URL
-                              credentialsId: "${GIT_CREDENTIALS_ID}"
-                          ]]
-                ])
+                script {
+                    checkout([$class: 'GitSCM', 
+                            branches: [[name: "*/${FEATURE_BRANCH}"]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [[$class: 'CleanBeforeCheckout']], // Ensures a clean workspace
+                            userRemoteConfigs: [[
+                                url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git',
+                                credentialsId: "${GIT_CREDENTIALS_ID}"
+                            ]]
+                    ])
+                }
             }
         }
+
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
