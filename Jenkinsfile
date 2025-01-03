@@ -44,7 +44,7 @@ pipeline {
             }
         }
 
-        stage('source code pull from github') {
+        stage('kubernetes source code pull from github') {
             steps {
                 git branch: 'kubernetes', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
             }
