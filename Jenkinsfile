@@ -6,7 +6,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
         REGISTRY_CREDS = 'dockerhub'
-        }
+    }
     stages {
         stage('Cleanup Workspace'){
             steps {
@@ -15,9 +15,20 @@ pipeline {
                 }
             }
         }
-        stage('source code pull from github') {
+        stage('Source Code Pull from GitHub'){
             steps {
-                git branch: 'main', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+                script {
+                    // Clone the repository initially (only once)
+                    sh 'git clone https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+                    
+                    // Change directory to the cloned repo
+                    dir('nodejs-ci-cd') {
+                        // Fetch all branches from the repository
+                        sh 'git fetch --all'
+                        // Checkout the branch you want to work on (e.g., main)
+                        sh 'git checkout main'
+                    }
+                }
             }
         }
         stage('Build Docker Image'){
@@ -35,7 +46,6 @@ pipeline {
                 }
             }
         }
-
         stage('Delete Docker Images'){
             steps {
                 sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
@@ -43,14 +53,18 @@ pipeline {
                 sh "cd .."
             }
         }
-
-        stage('kubernetes source code pull from github') {
+        stage('Kubernetes Source Code Pull from GitHub'){
             steps {
-                git branch: 'kubernetes', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+                script {
+                    // Fetch all branches from the repository
+                    dir('nodejs-ci-cd') {
+                        sh 'git fetch --all'
+                        sh 'git checkout kubernetes'
+                    }
+                }
             }
         }
-
-        stage('Updating Kubernetes deployment file') {
+        stage('Updating Kubernetes Deployment File') {
             steps {
                 sh "git checkout kubernetes"
                 sh "cat deployment.yml"
@@ -59,9 +73,7 @@ pipeline {
                 sh "cat deployment.yml"
             }
         }
-
-        
-        stage('Push the changed deployment file to Git') {
+        stage('Push the Changed Deployment File to Git') {
             steps {
                 script {
                     sh 'git checkout kubernetes'
