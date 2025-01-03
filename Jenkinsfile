@@ -3,7 +3,7 @@ pipeline {
     environment {
         GIT_CREDENTIALS_ID = 'github' // Replace with your Jenkins Git credentials ID
         FEATURE_BRANCH = 'feature/add-new-app' // Replace with your feature branch name
-        MAIN_BRANCH = 'main'       // Replace with your main branch name
+        MAIN_BRANCH = 'main' // Replace with your main branch name
     }
     stages {
         stage('Checkout Code') {
@@ -21,22 +21,31 @@ pipeline {
                 }
             }
         }
-        stage('Init application') {
+        stage('Init and Install Dependencies') {
             steps {
-                sh 'npm init -y'
-                sh 'npm install mocha --save-dev'
-                sh 'npm install express --save'
-                sh 'npm install supertest --save-dev'
+                script {
+                    // Initialize npm and install necessary dependencies
+                    sh 'npm init -y'
+                    sh 'npm install mocha --save-dev'
+                    sh 'npm install express --save'
+                    sh 'npm install supertest --save-dev'
+                }
             }
         }
-        stage('Install Dependencies') {
+        stage('Install Other Dependencies') {
             steps {
+                // Install any additional dependencies if required
                 sh 'npm install'
             }
         }
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                script {
+                    echo 'Running tests...'
+                    // Run Mocha with xunit reporter
+                    sh 'npm test --reporter xunit > result.xml'
+                    echo 'Tests completed.'
+                }
             }
         }
         stage('Merge to Main Branch') {
@@ -45,12 +54,14 @@ pipeline {
             }
             steps {
                 script {
+                    // Configure git user and perform merge
                     sh """
                     git config user.name "Md Rezaul Karim" // Replace with your name
                     git config user.email "sayem010ahmed@gmail.com" // Replace with your email
                     git checkout ${MAIN_BRANCH}
-                    git merge ${FEATURE_BRANCH}
-                    git push origin ${MAIN_BRANCH}
+                    git pull origin ${MAIN_BRANCH} // Make sure we have the latest main branch
+                    git merge ${FEATURE_BRANCH} // Merge feature branch into main
+                    git push origin ${MAIN_BRANCH} // Push changes to remote
                     """
                 }
             }
