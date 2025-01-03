@@ -26,6 +26,7 @@ pipeline {
                 sh 'npm init -y'
                 sh 'npm install mocha --save-dev'
                 sh 'npm install express --save'
+                sh 'npm install supertest --save-dev'
             }
         }
         stage('Install Dependencies') {
