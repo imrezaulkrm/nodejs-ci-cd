@@ -50,12 +50,17 @@ pipeline {
             }
             steps {
                 script {
-                    sh """
-                    git fetch --all
-                    git checkout ${MAIN_BRANCH}  // This ensures the main branch is checked out
-                    git merge ${FEATURE_BRANCH}
-                    git push origin ${MAIN_BRANCH}
-                    """
+                    // Fetch all branches explicitly
+                    sh 'git fetch origin'
+
+                    // Check out the main branch and ensure it's tracking the remote main branch
+                    sh 'git checkout -b ${MAIN_BRANCH} origin/${MAIN_BRANCH}'
+                    
+                    // Merge the feature branch into the main branch
+                    sh 'git merge ${FEATURE_BRANCH}'
+                    
+                    // Push the merged changes to the remote main branch
+                    sh 'git push origin ${MAIN_BRANCH}'
                 }
             }
         }
