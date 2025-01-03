@@ -44,6 +44,12 @@ pipeline {
             }
         }
 
+        stage('source code pull from github') {
+            steps {
+                git branch: 'kubernetes', url: 'https://github.com/imrezaulkrm/nodejs-ci-cd.git'
+            }
+        }
+
         stage('Updating Kubernetes deployment file') {
             steps {
                 sh "git checkout kubernetes"
@@ -64,7 +70,7 @@ pipeline {
                     sh 'git add deployment.yml'
                     sh 'git commit -m "Updated the deployment file"'
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'gpass', usernameVariable: 'githubuser')]) {
-                        sh "git push https://$githubuser:$gpass@github.com/imrezaulkrm/Studentify.git main"
+                        sh "git push https://$githubuser:$gpass@github.com/imrezaulkrm/nodejs-ci-cd.git kubernetes"
                     }
                 }
             }
