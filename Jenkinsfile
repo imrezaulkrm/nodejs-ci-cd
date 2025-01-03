@@ -69,6 +69,8 @@ pipeline {
     }
     post {
         success {
+            // Publish test results after successful tests
+            junit 'test-results/result.xml'
             echo 'Tests passed and branch merged successfully!'
         }
         failure {
