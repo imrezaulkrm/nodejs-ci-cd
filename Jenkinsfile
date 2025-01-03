@@ -59,10 +59,10 @@ pipeline {
         stage('Updating Kubernetes deployment file') {
             steps {
                 sh "ls"
-                sh "cat deployment.yml"
+                sh "cat deployment.yaml"
                 // Construct the sed command to change only line 17
-                sh """sed -i '17s#image:.*#image: ${IMAGE_NAME}:${IMAGE_TAG}#' deployment.yml"""
-                sh "cat deployment.yml"
+                sh """sed -i '17s#image:.*#image: ${IMAGE_NAME}:${IMAGE_TAG}#' deployment.yaml"""
+                sh "cat deployment.yaml"
             }
         }
 
@@ -72,7 +72,7 @@ pipeline {
                 script {
                     sh 'git config --global user.name "imrezaulkrm"'
                     sh 'git config --global user.email "sayem010ahmed@gmail.com"'
-                    sh 'git add deployment.yml'
+                    sh 'git add deployment.yaml'
                     sh 'git commit -m "Updated the deployment file"'
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'gpass', usernameVariable: 'githubuser')]) {
                         sh "git push https://$githubuser:$gpass@github.com/imrezaulkrm/nodejs-ci-cd-kubernetes.git main"
