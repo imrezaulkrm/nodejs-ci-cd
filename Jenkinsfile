@@ -52,6 +52,7 @@ pipeline {
 
         stage('Updating Kubernetes deployment file') {
             steps {
+                sh "ls"
                 sh "cd nodejs-ci-cd-kubernetes"
                 sh "cat deployment.yml"
                 // Construct the sed command to change only line 17
